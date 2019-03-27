@@ -1,3 +1,4 @@
+const moment = require('moment');
 const stocksService = require('./stockService');
 
 // list of stocks to be downloaded
@@ -5,15 +6,15 @@ const stocks = [
     'GGAL',
 ];
 
-let from = new Date();
-let to = new Date();
+let to = moment().subtract(2, 'days');
+let from = to.clone().subtract(90*2, 'days');
 
 stocks.forEach(stock => {
     stocksService
         .add(stock)
-        .then(() => stocks.download(stock, from, to))
-        .then((response) => Promise.all([
-            stocks.remove(stock),
-            stocks.writeToFs(response),
+        .then(() => stocksService.download(stock, from, to))
+        .then(responses => Promise.all([
+            stocksService.remove(stock),
+            ...responses.map(response => stocksService.writeToFs(response.body)),
         ]));
 });

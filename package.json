@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --inspect-brk index.js"
+    "debug": "node --inspect-brk index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/gndelia/market-rates-puentenet-extractor#readme",
   "dependencies": {
+    "moment": "^2.24.0",
     "request": "^2.88.0"
   }
 }
