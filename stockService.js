@@ -1,3 +1,4 @@
+const fs = require('fs');
 const moment = require('moment');
 const request = require('./request');
 
@@ -31,8 +32,25 @@ function download(stock, from, to) {
     return Promise.all(promises);
 }
 
-function writeToFs(data) {
-    console.log(data);
+function writeToFs(responses) {
+    let data = responses.reverse().map(({ body }) => {
+        return body
+            .split('\n')
+            .slice(2, -1) // skip two lines of header and last line that should be empty
+            .map(line => {
+                let [ firstPart, price ] = line.split('"');
+                let [ stock, date ] = firstPart.split(',');
+                return `${stock}, ${date}, "${price}"`;
+            }).join('\n');
+    }).join('\n');
+    return new Promise((resolve, reject) => {
+        fs.writeFile('cotizaciones.csv', data, 'utf8', err => {
+            if(err) {
+                return reject(err);
+            }
+            return resolve();
+        });
+    });
 }
 
 function sendDownloadRequest(stock, from, to) {

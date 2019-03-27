@@ -14,7 +14,7 @@ stocks.forEach(stock => {
         .add(stock)
         .then(() => stocksService.download(stock, from, to))
         .then(responses => Promise.all([
+            stocksService.writeToFs(responses),
             stocksService.remove(stock),
-            ...responses.map(response => stocksService.writeToFs(response.body)),
         ]));
 });
