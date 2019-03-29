@@ -47,7 +47,6 @@ function newInstance() {
     async function download(selected, from, to) {
         while (from < to) {
             let response = await sendDownloadRequest(selected, from, to)
-            // puente.net servers are not so good, so wait a bit until adding more requests
             await writeToFs(response);
             from.add(MAX_INTERVAL_RANGE, 'days');
         }
@@ -64,10 +63,6 @@ function newInstance() {
             .map(line => {
                 let [ firstPart, price ] = line.split('"');
                 let [ stock, date ] = firstPart.split(',');
-                // some stocks are new and do not have old enough information
-                if (!stock || !date || !price) {
-                    return '';
-                }
                 return `${stock}, ${date}, "${price}"`;
             })
             .filter(line => line !== '')
