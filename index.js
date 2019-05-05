@@ -21,6 +21,7 @@ let promises = stocks.map(stock => ({ type: 'ACCION', name: stock }))
         } catch (e) {
             console.log(e);
             console.log(`ticket ${ticket.name} failed`);
+            // there are two or three bonds that fail. Do not throw error (for now)
             // throw e;
         }
 });
